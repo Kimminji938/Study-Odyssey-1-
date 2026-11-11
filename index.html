@@ -1,0 +1,488 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Study Odyssey</title>
+<meta name="theme-color" content="#edf2ef">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+<link rel="apple-touch-icon" href="./icons/icon-192.png">
+
+<style>
+:root{--ink:#233044;--muted:#68778b;--paper:#fffaf0;--line:#e7dfcf;--blue:#3e7891;--gold:#f1bd4b;--green:#5e9b72}
+*{box-sizing:border-box}body{margin:0;background:#edf2ef;color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+button,input,select{font:inherit}button{cursor:pointer;border:0;border-radius:12px;padding:11px 14px;font-weight:750;background:#315f79;color:white;box-shadow:0 3px 0 #24495e}
+button:active{transform:translateY(2px);box-shadow:0 1px 0 #24495e}button:disabled{opacity:.45;cursor:not-allowed}
+.wrap{max-width:1050px;margin:auto;padding:18px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+.brand{font-weight:950;letter-spacing:.08em;font-size:clamp(20px,4vw,29px)}.sub{color:var(--muted);font-size:13px}
+.pills{display:flex;gap:8px;flex-wrap:wrap}.pill{background:#fff;border:1px solid var(--line);border-radius:999px;padding:8px 12px;font-weight:800}
+.layout{display:grid;grid-template-columns:1.3fr .9fr;gap:14px}.panel{background:var(--paper);border:2px solid var(--line);border-radius:18px;padding:15px;box-shadow:0 5px 0 #d9dfd8}
+h2{font-size:16px;margin:0 0 12px}.island{position:relative;overflow:hidden;border-radius:14px;background:#9bd5db;min-height:360px;border:3px solid #6eabb1}
+.island svg{display:block;width:100%;height:auto;image-rendering:pixelated}
+.region{position:absolute;border:2px solid #fff9;border-radius:10px;background:#1f455dce;color:white;padding:7px 9px;font-size:12px;font-weight:800;box-shadow:0 2px 0 #17374c}
+.region.locked{background:#4a5969c9;color:#e7e7e7}.region.unlocked{background:#326c55e8}.region:disabled{opacity:.9}
+.companion-sprite{position:absolute;left:52%;bottom:23%;z-index:3;display:none;align-items:center;gap:5px;transform:translateX(-50%);animation:buddyBob 2s ease-in-out infinite;pointer-events:none}.companion-sprite.active{display:flex}.companion-sprite .buddy{display:block;width:76px;height:76px;filter:drop-shadow(2px 3px 0 #365b4c55)}.pixel-character{width:100%;height:100%;image-rendering:pixelated;shape-rendering:crispEdges;overflow:visible}.item .pixel-thumb{display:block;width:48px;height:48px;margin:0 auto 4px;image-rendering:pixelated;shape-rendering:crispEdges}.companion-sprite .buddy-name{background:#fffdf0ef;border:1px solid #d7c99e;border-radius:8px;padding:3px 6px;font-size:10px;font-weight:900;white-space:nowrap}@keyframes buddyBob{0%,100%{translate:0 0}50%{translate:0 -7px}}
+#r1{left:7%;top:57%}#r2{left:39%;top:17%}#r3{right:7%;top:51%}#r4{left:43%;bottom:7%}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.stat{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px}.stat b{display:block;font-size:20px}.stat span{font-size:11px;color:var(--muted)}
+.stack{display:grid;gap:14px}.timer{text-align:center;padding:12px 0}.clock{font-size:48px;font-weight:950;letter-spacing:.03em;font-variant-numeric:tabular-nums}.controls{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}.secondary{background:#e8eef0;color:#29475a;box-shadow:0 3px 0 #cbd7da}.goldbtn{background:#d99a26;box-shadow:0 3px 0 #a8751d}
+.field{display:grid;gap:6px;margin:10px 0}.field label{font-size:12px;color:var(--muted);font-weight:800}.field select,.field input{width:100%;padding:10px;border:1px solid var(--line);border-radius:10px;background:white;color:var(--ink)}
+.notice{font-size:12px;color:var(--muted);line-height:1.5;margin:8px 0 0}.collection{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.enhance-box{background:#fff;border:1px solid var(--line);border-radius:13px;padding:12px}.enhance-box label{display:block;font-size:12px;font-weight:800;margin-bottom:6px}.enhance-box select{width:100%;padding:10px;border:1px solid var(--line);border-radius:9px;background:#fff;color:var(--ink)}.enhance-preview{margin-top:10px;padding:12px;border-radius:10px;background:#f5f0df;text-align:center;font-weight:850}.enhance-preview .level{display:block;color:#8a6422;font-size:13px;margin-top:4px}.enhance-cost{font-size:12px;color:var(--muted);margin-top:8px;line-height:1.6}.item.enhanced{border-color:#d6a83c;box-shadow:inset 0 0 0 1px #f4d88d}.item .level-tag{display:block;margin-top:4px;font-size:10px;font-weight:900;color:#9a6a13}.item.level-3,.item.level-4,.item.level-5{background:linear-gradient(145deg,#fffdf4,#fff0c9)}.enhance-box button:disabled{opacity:.45}
+.chests{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.chest{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 6px;text-align:center}.chest .emoji{font-size:31px;display:block}.chest strong{display:block;font-size:12px;margin:4px 0}.chest small{display:block;color:var(--muted);font-size:10px;margin-bottom:8px}.chest button{width:100%;padding:8px 5px;font-size:11px}.result{display:none;margin-top:12px;padding:12px;border:2px solid #e6bd59;background:#fff6d9;border-radius:14px;text-align:center;animation:pop .45s ease-out}.result.show{display:block}.result .big{font-size:44px;display:block}.result.reveal{animation:reveal .7s ease-out}@keyframes pop{0%{transform:scale(.88);opacity:.2}100%{transform:scale(1);opacity:1}}@keyframes reveal{0%{transform:rotate(-5deg) scale(.7);filter:brightness(1.8)}60%{transform:rotate(3deg) scale(1.08)}100%{transform:rotate(0) scale(1);filter:brightness(1)}}
+.item{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px;text-align:center;min-height:105px}.item .emoji{font-size:30px;display:block;margin-bottom:4px}.item strong{font-size:12px}.item small{display:block;color:var(--muted);font-size:10px;margin-top:3px}.item.unknown{filter:grayscale(1);opacity:.48}.item .kind{display:block;font-size:9px;color:#668078;margin-top:3px;font-weight:800}.item button{font-size:10px;padding:6px 7px;margin-top:7px;box-shadow:0 2px 0 #24495e}.item button.equipped{background:#5e9b72;box-shadow:0 2px 0 #42724f}
+.log{max-height:130px;overflow:auto;font-size:12px;color:var(--muted);line-height:1.7}.toast{min-height:22px;color:#39734f;font-size:13px;font-weight:800;margin-top:8px}
+footer{text-align:center;color:var(--muted);font-size:11px;margin:18px 0 5px}
+.install-area{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.install-help{max-width:330px;line-height:1.4}
+[hidden]{display:none!important}
+button{min-height:44px;touch-action:manipulation}
+.region{min-height:42px}
+@media(max-width:760px){.install-area{width:100%}.install-help{max-width:100%}}
+@media(max-width:760px){.layout{grid-template-columns:1fr}.island{min-height:0}.wrap{padding:12px}.top{align-items:flex-start;flex-direction:column}.clock{font-size:42px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+ <header class="top">
+  <div><div class="brand">🏝️ STUDY ODYSSEY</div><div class="sub">Study in the real world. Discover a tiny world of your own.</div></div>
+  <div class="pills"><div class="pill">🪙 <span id="gold">0</span> Gold</div><div class="pill">🧭 <span id="regions">1</span>/4 Regions</div><div class="pill">📚 <span id="total">0</span> min studied</div></div>
+  <div class="install-area">
+   <button id="installBtn" class="goldbtn" type="button" hidden>📲 홈 화면에 설치</button>
+   <span id="installHelp" class="sub install-help" hidden></span>
+  </div>
+ </header>
+ <main class="layout">
+  <section class="panel">
+   <h2>YOUR ISLAND · 탐험 지도</h2>
+   <div class="island">
+    <svg viewBox="0 0 640 390" role="img" aria-label="픽셀 아트 섬 지도">
+     <rect width="640" height="390" fill="#8bd0d8"/>
+     <g fill="#6bbac8"><path d="M0 40h70v18H0zm510 20h130v18H510zM20 300h90v16H20zm490 55h130v16H510z"/></g>
+     <path d="M72 196l28-78 68-52 87-19 91 28 68-3 99 65 39 78-38 91-92 42-112-9-104 21-91-35-59-64z" fill="#e8d69b" stroke="#b99c63" stroke-width="8"/>
+     <path d="M108 191l32-58 76-42 84-18 86 26 64 4 78 62 22 62-35 65-88 31-104-10-91 18-73-31-48-52z" fill="#83b978"/>
+     <path d="M225 108l42-39 55-7 40 30-21 46-62 10z" fill="#d6c28a"/>
+     <path d="M231 105l35-31 43-5-24 37z" fill="#f4f0df"/>
+     <g fill="#4d8b62"><rect x="143" y="164" width="15" height="22"/><circle cx="150" cy="158" r="17"/><rect x="175" y="190" width="13" height="20"/><circle cx="181" cy="184" r="15"/><rect x="425" y="190" width="14" height="22"/><circle cx="432" cy="184" r="17"/><rect x="469" y="235" width="13" height="21"/><circle cx="475" cy="229" r="16"/><rect x="326" y="267" width="14" height="20"/><circle cx="333" cy="260" r="16"/></g>
+     <g fill="#f1bd4b" stroke="#8f6b36" stroke-width="3"><rect x="282" y="192" width="65" height="52"/><path d="M270 194l45-38 45 38z"/><rect x="306" y="211" width="17" height="33" fill="#8b6446"/></g>
+     <g fill="#e7e2cf" stroke="#8f8b78" stroke-width="3"><rect x="372" y="118" width="30" height="37"/><path d="M366 119l21-23 21 23z"/></g>
+     <g fill="#fff" opacity=".9"><rect x="35" y="84" width="38" height="8"/><rect x="52" y="72" width="8" height="32"/><rect x="545" y="300" width="40" height="8"/><rect x="561" y="284" width="8" height="38"/></g>
+     <g fill="#fff"><circle cx="85" cy="43" r="3"/><circle cx="520" cy="42" r="4"/><circle cx="590" cy="110" r="3"/><circle cx="44" cy="265" r="3"/></g>
+    </svg>
+    <button class="region unlocked" id="r1" onclick="showRegion(0)">🏡 Home Island</button>
+    <button class="region locked" id="r2" onclick="showRegion(1)" disabled>🌲 ???</button>
+    <button class="region locked" id="r3" onclick="showRegion(2)" disabled>🏖️ ???</button>
+    <button class="region locked" id="r4" onclick="showRegion(3)" disabled>⛰️ ???</button>
+    <div class="companion-sprite" id="companionSprite"><span class="buddy" id="companionEmoji"></span><span class="buddy-name" id="companionName"></span></div>
+   </div>
+   <div class="stats">
+    <div class="stat"><b id="collectionCount">0/6</b><span>발견한 수집품</span></div>
+    <div class="stat"><b id="sessions">0</b><span>공부 세션</span></div>
+    <div class="stat"><b id="streak">0</b><span>연속 기록일</span></div>
+   </div>
+   <p class="notice">지역은 공부 누적 시간에 따라 열려. 지역을 눌러 탐험 지역을 고르면, 10분 이상 세션 보상으로 그 지역의 아이템을 발견할 수 있어. 동료를 설정하면 섬 위에서 함께 탐험해.</p>
+   <div class="panel" style="margin-top:12px;background:#f4f8ed;border-color:#d6e3c8;box-shadow:none;padding:12px">
+    <h2>🐾 ACTIVE COMPANION · 현재 동료</h2>
+    <div id="companionStatus" class="sub">아직 동료가 없어. 도감에서 동료를 발견해봐!</div>
+   </div>
+  </section>
+  <div class="stack">
+   <section class="panel">
+    <h2>⏳ STUDY SESSION</h2>
+    <div class="field"><label for="activityMode">활동 유형</label><select id="activityMode" onchange="updateSubjectOptions()"><option value="study">📚 Study · 과목별 보상</option><option value="homework">📝 Homework · 숙제 보상</option></select></div>
+    <div class="field" id="subjectField"><label for="subject">과목 / 숙제 종류</label><select id="subject" onchange="updateRewardPreview()"><option>Mathematics</option><option>AP Lang</option><option>AP US Gov</option><option>SAT</option><option>Other</option></select></div>
+    <div class="pills" style="margin:8px 0"><div class="pill" id="rewardPreview">예상 보상: 분당 1 Gold</div></div>
+    <div class="stats" style="margin:8px 0">
+     <div class="stat"><b id="studyMinutes">0</b><span>Study min</span></div>
+     <div class="stat"><b id="homeworkMinutes">0</b><span>Homework min</span></div>
+     <div class="stat"><b id="homeworkSessions">0</b><span>Homework sessions</span></div>
+    </div>
+    <div class="timer"><div class="clock" id="clock">25:00</div><div class="sub" id="timerStatus">준비되면 시작해!</div></div>
+    <div class="controls"><button id="startBtn" onclick="startTimer()">시작</button><button class="secondary" onclick="pauseTimer()">일시정지</button><button class="secondary" onclick="resetTimer()">초기화</button></div>
+    <div class="toast" id="toast"></div>
+    <p class="notice">실제로 집중하거나 숙제한 시간만 기록해줘. Study와 Homework 모두 과목별 배율을 적용하고, 숙제는 같은 과목의 Study보다 낮은 보상을 줘. 중간에 쉬었다면 일시정지하면 돼.</p>
+    <div class="controls" style="margin-top:10px"><button class="goldbtn" onclick="finishSession()">세션 완료 · 보상 받기</button></div>
+   </section>
+   <section class="panel">
+    <h2>🎒 COLLECTION · 수집 도감</h2>
+    <div class="collection" id="collection"></div>
+    <p class="notice">장식품은 도감에 보관하고, 동료 아이템은 버튼을 눌러 섬에 데려올 수 있어. 골드는 Study와 Homework의 과목별 배율에 따라 지급돼. 숙제는 Study보다 낮은 배율이 적용돼.</p>
+   </section>
+   <section class="panel">
+    <h2>✨ ENHANCEMENT · 장비 강화</h2>
+    <div class="sub" style="margin-bottom:10px">아이템은 공부 중 탐험으로 발견하고, 골드와 조각을 사용해 강화해봐.</div>
+    <div class="enhance-box">
+     <label for="enhanceItem">강화할 아이템</label>
+     <select id="enhanceItem" onchange="updateEnhancePreview()"><option value="">보유 아이템 없음</option></select>
+     <div class="enhance-preview" id="enhancePreview">도감에서 아이템을 발견하면 여기서 강화할 수 있어.</div>
+     <div class="enhance-cost" id="enhanceCost">강화 재료를 확인해봐.</div>
+     <button class="goldbtn" id="enhanceButton" style="width:100%;margin-top:9px" onclick="enhanceItem()">🎲 강화 시도</button>
+     <div class="toast" id="enhanceToast"></div>
+    </div>
+    <div class="result" id="gachaResult"><span class="big" id="resultEmoji">✨</span><strong id="resultName">강화 결과</strong><div id="resultRarity" class="sub"></div><div id="resultDetail" class="notice"></div></div>
+    <p class="notice">강화 성공 확률은 +1부터 +5까지 85% · 70% · 55% · 40% · 25%. 실패해도 아이템과 강화 단계는 유지되지만 사용한 재료는 돌아오지 않아.</p>
+   </section>
+   <section class="panel">
+    <h2>🧩 SHARD POUCH · 강화 재료</h2>
+    <div class="pills"><div class="pill">🧩 <span id="shards">0</span> Shards</div><div class="pill">🎒 <span id="owned">0</span> Items</div></div>
+    <p class="notice">탐험으로 아이템을 발견해. 이미 해당 지역의 아이템을 모두 모은 뒤 탐험 보상을 받으면 Shard를 얻을 수 있어. 조각은 높은 단계 강화에 사용돼.</p>
+   </section>
+   <section class="panel">
+    <h2>💾 SAVE · 백업</h2>
+    <div class="controls"><button class="secondary" onclick="exportSave()">저장 파일 내보내기</button><button class="secondary" onclick="document.getElementById('importFile').click()">불러오기</button><input type="file" id="importFile" accept=".json,application/json" hidden onchange="importSave(event)"></div>
+    <p class="notice">진행 상황은 이 브라우저에만 저장돼. 브라우저 데이터를 지우거나 기기를 바꾸기 전에 내보내기를 해두면 안전해.</p>
+    <div class="toast" id="saveToast"></div>
+   </section>
+   <section class="panel">
+    <h2>📜 RECENT LOG</h2><div class="log" id="log">아직 기록이 없어. 첫 탐험을 시작해봐!</div>
+   </section>
+  </div>
+ </main>
+ <footer>Study Odyssey · Your progress is saved in this browser on this device.</footer>
+</div>
+<script>
+const KEY='studyOdysseySave_v1';
+const MIN_DROP_MINUTES=10;
+const regionNames=['🏡 Home Island','🌲 Whispering Woods','🏖️ Sunstone Shore','⛰️ Cloudpeak'];
+const regionThresholds=[0,60,180,360];
+const itemRegion={shell:0,sprout:0,fox:0,mushroom:1,crystal:1,lantern:1,starfish:2,moon:2,crown:2,feather:3,compass:3,dragon:3};
+const items=[
+ {id:'shell',emoji:'🐚',name:'Pearl Shell',desc:'Home Island의 작은 기념품',rarity:'Common'},
+ {id:'sprout',emoji:'🌱',name:'Island Sprout',desc:'새로운 시작의 상징',rarity:'Common'},
+ {id:'feather',emoji:'🪶',name:'Sky Feather',desc:'바람이 남긴 선물',rarity:'Rare'},
+ {id:'crystal',emoji:'💎',name:'Blue Crystal',desc:'숲속에서 발견한 보석',rarity:'Epic'},
+ {id:'starfish',emoji:'⭐',name:'Starfish',desc:'햇살 가득한 해변의 별',rarity:'Rare'},
+ {id:'compass',emoji:'🧭',name:'Old Compass',desc:'다음 모험을 가리키는 나침반',rarity:'Legendary'},
+ {id:'fox',emoji:'🦊',name:'Ember Fox',desc:'따뜻한 꼬리를 가진 섬의 친구',rarity:'Epic',type:'companion'},
+ {id:'mushroom',emoji:'🍄',name:'Mosscap',desc:'숲에서 온 작은 동료',rarity:'Common',type:'companion'},
+ {id:'moon',emoji:'🌙',name:'Moon Charm',desc:'밤하늘의 빛을 담은 장식',rarity:'Rare'},
+ {id:'dragon',emoji:'🐉',name:'Pocket Dragon',desc:'아주 작지만 당당한 전설의 친구',rarity:'Legendary',type:'companion'},
+ {id:'lantern',emoji:'🏮',name:'Wanderer Lantern',desc:'길을 밝혀주는 오래된 등불',rarity:'Epic'},
+ {id:'crown',emoji:'👑',name:'Coral Crown',desc:'바닷속 왕국의 왕관',rarity:'Legendary'}
+];
+const rates={
+ common:[['Common',70],['Rare',25],['Epic',4],['Legendary',1]],
+ rare:[['Common',40],['Rare',45],['Epic',13],['Legendary',2]],
+ legendary:[['Common',10],['Rare',40],['Epic',35],['Legendary',15]]
+};
+let state=load();
+let remaining=25*60, elapsed=0, ticker=null, running=false, endAt=0;
+function fresh(){return {gold:0,totalMinutes:0,sessions:0,studyMinutes:0,homeworkMinutes:0,studySessions:0,homeworkSessions:0,items:[],itemLevels:{},shards:0,companion:null,logs:[],days:[],lastDate:null,streak:0,region:0}}
+function load(){try{const s={...fresh(),...JSON.parse(localStorage.getItem(KEY)||'{}')};if(!Array.isArray(s.items))s.items=[];if(!s.itemLevels||typeof s.itemLevels!=='object'||Array.isArray(s.itemLevels))s.itemLevels={};if(typeof s.shards!=='number')s.shards=0;if(typeof s.companion!=='string')s.companion=null;if(typeof s.studyMinutes!=='number')s.studyMinutes=s.totalMinutes||0;if(typeof s.homeworkMinutes!=='number')s.homeworkMinutes=0;if(typeof s.studySessions!=='number')s.studySessions=s.sessions||0;if(typeof s.homeworkSessions!=='number')s.homeworkSessions=0;return s}catch(e){return fresh()}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}render()}
+function sanitize(s){
+ ['gold','totalMinutes','sessions','studyMinutes','homeworkMinutes','studySessions','homeworkSessions','shards','streak'].forEach(k=>{s[k]=Number.isFinite(s[k])&&s[k]>=0?s[k]:0});
+ s.items=[...new Set((Array.isArray(s.items)?s.items:[]).filter(id=>items.some(x=>x.id===id)))];
+ s.itemLevels=s.itemLevels&&typeof s.itemLevels==='object'?s.itemLevels:{};const levels={};s.items.forEach(id=>{const n=Number(s.itemLevels[id]||0);levels[id]=Number.isFinite(n)?Math.max(0,Math.min(5,Math.floor(n))):0});s.itemLevels=levels;
+ s.logs=Array.isArray(s.logs)?s.logs.filter(x=>typeof x==='string').slice(0,50):[];
+ if(!items.some(x=>x.id===s.companion&&x.type==='companion'&&s.items.includes(x.id)))s.companion=null;
+ if(![0,1,2,3].includes(s.region)||s.totalMinutes<regionThresholds[s.region])s.region=0;
+ return s;
+}
+function exportSave(){
+ const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});
+ const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='study-odyssey-save-'+today()+'.json';
+ document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1500);
+ document.getElementById('saveToast').textContent='저장 파일을 내려받았어! 안전한 곳에 보관해줘.';
+}
+function importSave(ev){
+ const f=ev.target.files&&ev.target.files[0];if(!f)return;
+ const r=new FileReader();
+ r.onload=()=>{
+  try{
+   const d=JSON.parse(r.result);
+   if(!d||typeof d!=='object'||typeof d.gold!=='number'||!Array.isArray(d.items))throw new Error('bad');
+   if(!confirm('현재 진행 상황이 가져온 파일로 덮어써져. 계속할까?'))return;
+   state=sanitize({...fresh(),...d});save();
+   document.getElementById('saveToast').textContent='불러오기 완료!';
+  }catch(e){document.getElementById('saveToast').textContent='올바른 저장 파일이 아니야.'}
+  ev.target.value='';
+ };
+ r.readAsText(f);
+}
+
+function pixelSprite(id, extraClass='pixel-character'){
+ const art={
+  fox:`<svg class="${extraClass}" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+   <g shape-rendering="crispEdges">
+    <rect x="2" y="1" width="3" height="4" fill="#c85c2d"/><rect x="3" y="2" width="1" height="2" fill="#f5c7a0"/>
+    <rect x="11" y="1" width="3" height="4" fill="#c85c2d"/><rect x="12" y="2" width="1" height="2" fill="#f5c7a0"/>
+    <rect x="3" y="4" width="10" height="7" fill="#e87935"/><rect x="4" y="5" width="8" height="5" fill="#f18b42"/>
+    <rect x="5" y="7" width="2" height="2" fill="#263344"/><rect x="10" y="7" width="2" height="2" fill="#263344"/>
+    <rect x="7" y="9" width="3" height="2" fill="#fff0d6"/><rect x="8" y="9" width="1" height="1" fill="#51372d"/>
+    <rect x="4" y="11" width="8" height="3" fill="#c85c2d"/><rect x="5" y="12" width="6" height="2" fill="#f18b42"/>
+    <rect x="2" y="12" width="3" height="2" fill="#fff0d6"/><rect x="1" y="11" width="2" height="2" fill="#e87935"/>
+    <rect x="5" y="14" width="2" height="1" fill="#573b32"/><rect x="10" y="14" width="2" height="1" fill="#573b32"/>
+   </g></svg>`,
+  mushroom:`<svg class="${extraClass}" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+   <g shape-rendering="crispEdges">
+    <rect x="3" y="2" width="10" height="2" fill="#b94d4a"/><rect x="1" y="4" width="14" height="4" fill="#df625b"/>
+    <rect x="3" y="3" width="2" height="2" fill="#fff1d6"/><rect x="10" y="4" width="2" height="2" fill="#fff1d6"/>
+    <rect x="6" y="2" width="2" height="1" fill="#fff1d6"/><rect x="2" y="7" width="12" height="2" fill="#b94d4a"/>
+    <rect x="5" y="8" width="6" height="5" fill="#f2dfb8"/><rect x="4" y="10" width="8" height="3" fill="#f8ebcf"/>
+    <rect x="6" y="10" width="1" height="1" fill="#263344"/><rect x="9" y="10" width="1" height="1" fill="#263344"/>
+    <rect x="7" y="12" width="2" height="1" fill="#bd786d"/><rect x="5" y="13" width="2" height="2" fill="#6c9c68"/><rect x="9" y="13" width="2" height="2" fill="#6c9c68"/>
+   </g></svg>`,
+  dragon:`<svg class="${extraClass}" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+   <g shape-rendering="crispEdges">
+    <rect x="3" y="4" width="8" height="7" fill="#4d9b79"/><rect x="4" y="3" width="6" height="2" fill="#6fbd91"/>
+    <rect x="2" y="1" width="2" height="4" fill="#e8c66b"/><rect x="9" y="1" width="2" height="4" fill="#e8c66b"/>
+    <rect x="10" y="5" width="4" height="4" fill="#6fbd91"/><rect x="12" y="6" width="1" height="1" fill="#263344"/>
+    <rect x="13" y="8" width="2" height="1" fill="#f0d18b"/>
+    <rect x="1" y="5" width="4" height="4" fill="#347c65"/><rect x="1" y="4" width="3" height="2" fill="#6fbd91"/>
+    <rect x="5" y="6" width="2" height="2" fill="#263344"/><rect x="8" y="6" width="1" height="2" fill="#263344"/>
+    <rect x="6" y="11" width="2" height="3" fill="#347c65"/><rect x="10" y="11" width="2" height="3" fill="#347c65"/>
+    <rect x="5" y="14" width="3" height="1" fill="#e8c66b"/><rect x="10" y="14" width="3" height="1" fill="#e8c66b"/>
+    <rect x="3" y="10" width="2" height="2" fill="#e8c66b"/>
+   </g></svg>`
+ };
+ return art[id]||'';
+}
+function dateStr(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function today(){return dateStr(new Date())}
+function yesterdayStr(){const d=new Date();d.setDate(d.getDate()-1);return dateStr(d)}
+function streakNow(){return (state.lastDate===today()||state.lastDate===yesterdayStr())?state.streak:0}
+function render(){
+ document.getElementById('gold').textContent=state.gold;
+ document.getElementById('regions').textContent=1+(state.totalMinutes>=60?1:0)+(state.totalMinutes>=180?1:0)+(state.totalMinutes>=360?1:0);
+ document.getElementById('total').textContent=state.totalMinutes;
+ document.getElementById('studyMinutes').textContent=state.studyMinutes;
+ document.getElementById('homeworkMinutes').textContent=state.homeworkMinutes;
+ document.getElementById('homeworkSessions').textContent=state.homeworkSessions;
+ document.getElementById('collectionCount').textContent=state.items.length+'/'+items.length;
+ document.getElementById('sessions').textContent=state.sessions;
+ document.getElementById('streak').textContent=streakNow();
+ document.getElementById('shards').textContent=state.shards||0;
+ document.getElementById('owned').textContent=state.items.length;
+ const thresholds=regionThresholds, ids=['r1','r2','r3','r4'], names=regionNames;
+ ids.forEach((id,i)=>{let b=document.getElementById(id),open=state.totalMinutes>=thresholds[i];b.disabled=!open;b.className='region '+(open?'unlocked':'locked');b.textContent=open?names[i]+(state.region===i?' 📍':''):(i===1?'🌲 60 min':i===2?'🏖️ 180 min':'⛰️ 360 min')});
+ document.getElementById('collection').innerHTML=items.map(it=>{
+  const got=state.items.includes(it.id), buddy=it.type==='companion', equipped=state.companion===it.id;
+  const action=got&&buddy?`<button class="${equipped?'equipped':'secondary'}" onclick="setCompanion('${it.id}')">${equipped?'함께 탐험 중':'동료로 설정'}</button>`:'';
+  const visual=got?(buddy?pixelSprite(it.id,'pixel-thumb'):it.emoji):'❔';
+  const level=state.itemLevels?.[it.id]||0;
+  return `<div class="item ${got?'':'unknown'} ${got&&level>0?'enhanced level-'+level:''}">${buddy&&got?visual:`<span class="emoji">${visual}</span>`}<strong>${got?it.name:'Undiscovered'}</strong><small>${got?it.rarity:regionNames[itemRegion[it.id]].split(' ')[0]+' 지역에서 발견 가능'}</small>${got?`<span class="level-tag">✨ 강화 +${level}</span><span class="kind">${buddy?'🐾 COMPANION':'🎒 COLLECTION'} · ${regionNames[itemRegion[it.id]].replace(/^\S+\s/,'')}</span>`:''}${action}</div>`;
+ }).join('');
+ const active=items.find(it=>it.id===state.companion&&it.type==='companion'&&state.items.includes(it.id));
+ const sprite=document.getElementById('companionSprite');
+ sprite.classList.toggle('active',!!active);
+ document.getElementById('companionEmoji').innerHTML=active?pixelSprite(active.id):'';
+ document.getElementById('companionName').textContent=active?active.name:'';
+ document.getElementById('companionStatus').textContent=active?`${active.emoji} ${active.name}이(가) 지금 섬을 함께 탐험하고 있어!`:'아직 동료가 없어. 도감에서 동료를 발견해봐!';
+ document.getElementById('log').innerHTML=state.logs.length?state.logs.slice(0,12).map(x=>'• '+escapeHtml(x)).join('<br>'):'아직 기록이 없어. 첫 탐험을 시작해봐!';
+ refreshEnhanceOptions();
+}
+function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function fmt(s){return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
+function updateClock(){document.getElementById('clock').textContent=fmt(remaining)}
+const studyMultipliers={'Mathematics':2,'AP Lang':1.8,'AP US Gov':1.8,'SAT':3,'Other':1.5};
+const homeworkMultipliers={'Mathematics':1,'AP Lang':0.9,'AP US Gov':0.9,'SAT':1.5,'Other':0.5};
+function updateSubjectOptions(){
+ const mode=document.getElementById('activityMode').value;
+ const select=document.getElementById('subject');
+ const previous=select.value;
+ const options=mode==='homework'?['Mathematics','AP Lang','AP US Gov','SAT','Other']:['Mathematics','AP Lang','AP US Gov','SAT','Other'];
+ select.innerHTML=options.map(x=>`<option value="${x}">${mode==='homework'?(x==='Other'?'Homework · 기타 과목 통합':x+' · 숙제'):x}</option>`).join('');
+ select.value=options.includes(previous)?previous:'Mathematics';
+ document.querySelector('#subjectField label').textContent=mode==='homework'?'숙제 과목':'공부 과목';
+ updateRewardPreview();
+}
+function updateRewardPreview(){
+ const mode=document.getElementById('activityMode').value;
+ const subject=document.getElementById('subject').value;
+ const rate=mode==='homework'?(homeworkMultipliers[subject]||0.5):(studyMultipliers[subject]||1.5);
+ const label=mode==='homework'?`${subject==='Other'?'기타 과목 통합 숙제':subject+' 숙제'}`:`${subject} Study`;
+ document.getElementById('rewardPreview').textContent=`${label}: 분당 ${Number.isInteger(rate)?rate:rate.toFixed(2)} Gold · 25분 기준 ${Math.round(rate*25)} Gold`;
+}
+function syncTimer(){const left=Math.max(0,Math.ceil((endAt-Date.now())/1000));remaining=left;elapsed=25*60-left;updateClock();return left}
+function tick(){if(!running)return;if(syncTimer()===0){pauseTimer();document.getElementById('timerStatus').textContent='25분 완료! 세션 보상을 받아봐.';document.getElementById('toast').textContent='집중 완료! 세션을 마무리할 수 있어.'}}
+function startTimer(){if(running||remaining<=0)return;running=true;endAt=Date.now()+remaining*1000;document.getElementById('timerStatus').textContent='집중하는 중...';ticker=setInterval(tick,500)}
+function pauseTimer(){if(running)syncTimer();running=false;if(ticker)clearInterval(ticker);ticker=null;document.getElementById('timerStatus').textContent='일시정지'}
+function resetTimer(){pauseTimer();remaining=25*60;elapsed=0;updateClock();document.getElementById('timerStatus').textContent='준비되면 시작해!';document.getElementById('toast').textContent=''}
+function finishSession(){
+ pauseTimer();
+ const mins=Math.floor(elapsed/60);
+ if(mins<1){document.getElementById('toast').textContent='최소 1분 이상 기록해야 보상을 받을 수 있어.';return}
+ const mode=document.getElementById('activityMode').value;
+ const subject=document.getElementById('subject').value;
+ const multiplier=mode==='homework'?(homeworkMultipliers[subject]||0.5):(studyMultipliers[subject]||1.5);
+ const earned=Math.round(mins*multiplier);
+ state.gold+=earned;state.totalMinutes+=mins;state.sessions++;
+ if(mode==='homework'){state.homeworkMinutes+=mins;state.homeworkSessions++}
+ else{state.studyMinutes+=mins;state.studySessions++}
+ const date=today();
+ if(state.lastDate!==date){state.streak=state.lastDate===yesterdayStr()?state.streak+1:1;state.lastDate=date}
+ let found=null,shardBonus=false;
+ if(mins>=MIN_DROP_MINUTES&&Math.random()<0.65){
+  const missing=items.filter(x=>itemRegion[x.id]===state.region&&!state.items.includes(x.id));
+  if(missing.length){
+   const w={Common:5,Rare:3,Epic:2,Legendary:1};
+   let r=Math.random()*missing.reduce((a,x)=>a+w[x.rarity],0);
+   found=missing[missing.length-1];
+   for(const x of missing){r-=w[x.rarity];if(r<0){found=x;break}}
+   state.items.push(found.id);
+  }else{state.shards=(state.shards||0)+1;shardBonus=true}
+ }
+ const activityLabel=mode==='homework'?`Homework · ${subject==='Other'?'기타 과목':subject}`:`Study · ${subject}`;
+ state.logs.unshift(`${new Date().toLocaleString()} · ${activityLabel} ${mins}분 · ×${multiplier} · +${earned} Gold${found?' · 발견: '+found.name:''}${shardBonus?' · 지역 완료 +1 Shard':''}`);
+ document.getElementById('toast').textContent=`${activityLabel} ${mins}분 완료! ×${multiplier} · +${earned} Gold${found?' · '+found.emoji+' '+found.name+' 발견!':''}${shardBonus?' · 🧩 +1 Shard':''}${mins<MIN_DROP_MINUTES?' · '+MIN_DROP_MINUTES+'분 이상부터 발견 기회가 생겨':''}`;
+ resetTimer();save();
+}
+function setCompanion(id){
+ const item=items.find(x=>x.id===id&&x.type==='companion');
+ if(!item||!state.items.includes(id))return;
+ state.companion=state.companion===id?null:id;
+ state.logs.unshift(`${new Date().toLocaleString()} · 동료 설정 · ${state.companion?item.name+'와 함께 탐험':'동료와 잠시 헤어짐'}`);
+ document.getElementById('toast').textContent=state.companion?`${item.emoji} ${item.name}이(가) 섬에 합류했어!`:'동료를 잠시 쉬게 했어.';
+ save();
+}
+function showRegion(i){
+ if(state.totalMinutes<regionThresholds[i])return;
+ state.region=i;
+ const left=items.filter(x=>itemRegion[x.id]===i&&!state.items.includes(x.id)).length;
+ document.getElementById('toast').textContent=regionNames[i]+' 탐험 시작! '+(left?`이 지역 미발견 아이템 ${left}개 · ${MIN_DROP_MINUTES}분 이상 세션으로 발견할 수 있어.`:'이 지역은 모두 발견했어! 세션 보상은 조각으로 바뀌어.');
+ save();
+}
+const enhanceChances=[0.85,0.70,0.55,0.40,0.25];
+const enhanceCosts=[
+ {gold:50,shards:0},{gold:75,shards:0},{gold:125,shards:1},
+ {gold:200,shards:1},{gold:300,shards:2}
+];
+function selectedEnhanceItem(){
+ const id=document.getElementById('enhanceItem')?.value;
+ return items.find(x=>x.id===id&&state.items.includes(id))||null;
+}
+function updateEnhancePreview(){
+ const select=document.getElementById('enhanceItem');
+ const preview=document.getElementById('enhancePreview');
+ const cost=document.getElementById('enhanceCost');
+ const button=document.getElementById('enhanceButton');
+ if(!select||!preview||!cost||!button)return;
+ const current=selectedEnhanceItem();
+ if(!current){
+  preview.textContent=state.items.length?'강화할 아이템을 선택해줘.':'아직 보유한 아이템이 없어. 공부 세션을 완료해 탐험 아이템을 발견해봐.';
+  cost.textContent='보유 Gold와 Shard는 위쪽 상태창에서 확인할 수 있어.';
+  button.disabled=true;return;
+ }
+ const level=state.itemLevels[current.id]||0;
+ if(level>=5){
+  preview.innerHTML=`${current.emoji} ${current.name}<span class="level">✨ MAX LEVEL +5</span>`;
+  cost.textContent='최대 강화 단계에 도달했어!';
+  button.disabled=true;return;
+ }
+ const c=enhanceCosts[level],chance=Math.round(enhanceChances[level]*100);
+ preview.innerHTML=`${current.emoji} ${current.name}<span class="level">현재 +${level} → 목표 +${level+1} · 성공 확률 ${chance}%</span>`;
+ cost.textContent=`필요 재료: ${c.gold} Gold${c.shards?' + '+c.shards+' Shard':''} · 보유: ${state.gold} Gold / ${state.shards} Shard`;
+ button.disabled=state.gold<c.gold||state.shards<c.shards;
+}
+function enhanceItem(){
+ const item=selectedEnhanceItem();
+ if(!item)return;
+ const level=state.itemLevels[item.id]||0;
+ if(level>=5)return;
+ const cost=enhanceCosts[level],chance=enhanceChances[level];
+ if(state.gold<cost.gold||state.shards<cost.shards){
+  document.getElementById('enhanceToast').textContent='강화 재료가 부족해. 필요한 Gold와 Shard를 확인해봐.';return;
+ }
+ state.gold-=cost.gold;state.shards-=cost.shards;
+ const success=Math.random()<chance;
+ const box=document.getElementById('gachaResult');
+ box.classList.remove('show','reveal');void box.offsetWidth;box.classList.add('show','reveal');
+ document.getElementById('resultEmoji').textContent=success?'✨':'💨';
+ document.getElementById('resultName').textContent=success?'강화 성공!':'강화 실패';
+ document.getElementById('resultRarity').textContent=`${item.name} · +${level} → +${success?level+1:level}`;
+ document.getElementById('resultDetail').textContent=success?'아이템이 한 단계 강해졌어! 도감에서 강화 효과를 확인해봐.':'강화에 실패했어. 아이템과 현재 단계는 유지됐지만 재료는 사용됐어.';
+ if(success)state.itemLevels[item.id]=level+1;
+ state.logs.unshift(`${new Date().toLocaleString()} · 강화 ${success?'성공':'실패'} · ${item.name} +${level}${success?' → +'+(level+1):' 유지'}`);
+ state.logs=state.logs.slice(0,50);
+ document.getElementById('enhanceToast').textContent=success?`${item.name} 강화 +${level+1} 달성!`:'실패! 다음 기회를 노려보자.';
+ save();
+}
+function refreshEnhanceOptions(){
+ const select=document.getElementById('enhanceItem');
+ if(!select)return;
+ const previous=select.value;
+ const owned=items.filter(x=>state.items.includes(x.id));
+ select.innerHTML=owned.length?owned.map(x=>`<option value="${x.id}">${x.emoji} ${x.name} · +${state.itemLevels[x.id]||0}</option>`).join(''):'<option value="">보유 아이템 없음</option>';
+ if(owned.some(x=>x.id===previous))select.value=previous;
+ updateEnhancePreview();
+}
+render();
+updateSubjectOptions();updateClock();updateRewardPreview();
+document.addEventListener('visibilitychange',()=>{if(running)tick()});
+try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist().catch(()=>{})}catch(e){}
+</script>
+
+<script>
+/* PWA: 설치 프롬프트와 오프라인 지원 */
+(() => {
+  const installBtn = document.getElementById('installBtn');
+  const installHelp = document.getElementById('installHelp');
+  let deferredInstallPrompt = null;
+
+  function isStandalone() {
+    return window.matchMedia('(display-mode: standalone)').matches ||
+      window.navigator.standalone === true;
+  }
+
+  function showManualHelp() {
+    if (isStandalone()) {
+      installBtn.hidden = true;
+      installHelp.hidden = true;
+      return;
+    }
+    installBtn.hidden = true;
+    installHelp.hidden = false;
+    installHelp.textContent =
+      '설치 버튼이 나타나지 않으면 Chrome 메뉴(⋮)에서 “앱 설치” 또는 “홈 화면에 추가”를 선택해줘.';
+  }
+
+  if (isStandalone()) {
+    installBtn.hidden = true;
+    installHelp.hidden = true;
+  } else {
+    // Chrome이 설치 조건을 충족하면 이벤트를 보내므로 그때만 설치 버튼을 표시한다.
+    installHelp.hidden = false;
+    installHelp.textContent = '설치 준비 중… 설치 메뉴가 보이지 않으면 Chrome 메뉴(⋮)를 확인해줘.';
+    window.addEventListener('beforeinstallprompt', (event) => {
+      event.preventDefault();
+      deferredInstallPrompt = event;
+      installBtn.hidden = false;
+      installHelp.hidden = true;
+    });
+    window.addEventListener('appinstalled', () => {
+      deferredInstallPrompt = null;
+      installBtn.hidden = true;
+      installHelp.hidden = true;
+    });
+    installBtn.addEventListener('click', async () => {
+      if (!deferredInstallPrompt) {
+        showManualHelp();
+        return;
+      }
+      deferredInstallPrompt.prompt();
+      try { await deferredInstallPrompt.userChoice; } catch (_) {}
+      deferredInstallPrompt = null;
+      installBtn.hidden = true;
+      showManualHelp();
+    });
+    // beforeinstallprompt가 오지 않는 브라우저를 위한 안내.
+    window.setTimeout(() => {
+      if (!deferredInstallPrompt && !isStandalone()) showManualHelp();
+    }, 2500);
+  }
+
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js')
+        .then((registration) => {
+          // 새 버전이 배포되면 브라우저가 새 Service Worker를 설치한다.
+          registration.update().catch(() => {});
+        })
+        .catch((error) => console.warn('Service Worker 등록 실패:', error));
+    });
+  }
+})();
+</script>
+
+</body>
+</html>
